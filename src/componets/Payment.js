@@ -1,22 +1,85 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import axios from "../axios";
+import { Link, useHistory } from "react-router-dom";
 import { useStateValue } from "../StateProvider";
 import CheckoutProduct from "./CheckoutProduct";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import CurrencyFormat from "react-currency-format";
+import { getBasketTotal } from "../reducer";
+import { db } from "../firebase";
+
 import "./Payment.css";
 
 function Payment() {
   const [{ basket, user }, dispatch] = useStateValue();
 
-  // Variables
-  const [error, setError] = useState(null);
-  const [disabled, setDisabled] = useState(true);
-
   const stripe = useStripe();
+  const history = useHistory();
   const elements = useElements();
 
-  const handleSubmit = (event) => {};
+  // Variables
+  const [succeeded, setSucceeded] = useState();
+  const [processing, setProcessing] = useState("");
+  const [error, setError] = useState(null);
+  const [disabled, setDisabled] = useState(true);
+  const [clientSecret, setClientSecret] = useState(true);
+
+  useEffect(() => {
+    // generate the special stripe secret whith allows us to charge a customer
+
+    const getClientSecret = async () => {
+      const response = await axios({
+        method: "post",
+        // Stripe expects the total in a currencies subunit (1 usd = 1 cent)
+        url: `/payments/create?total=${getBasketTotal(basket) * 100}`,
+      });
+      setClientSecret(response.data.clientSecret);
+    };
+
+    getClientSecret();
+  }, [basket]);
+
+  console.log("THE SECRET IS=====>", clientSecret);
+  console.log("HOLAAA ACAAA SOY USUARIO", user);
+
+  const handleSubmit = async (event) => {
+    // do all the stripe stuff
+    event.preventDefault();
+    setProcessing(true); // with this you can only click onces the button
+
+    const payload = await stripe
+      .confirmCardPayment(clientSecret, {
+        payment_method: {
+          // Find the card data
+          card: elements.getElement(CardElement),
+        },
+      })
+      .then(({ paymentIntent }) => {
+        // paymentIntent = payment confirmation
+
+        // NOSQL database
+        db.collection("users")
+          .doc(user?.uid)
+          .collection("orders")
+          .doc(paymentIntent.id) // here we are creating a document and adding the infomartion below
+          .set({
+            basket: basket,
+            amount: paymentIntent.amount,
+            created: paymentIntent.created, // will give us a timestamp when the order was created
+          });
+
+        setSucceeded(true);
+        setError(null);
+        setProcessing(false);
+
+        dispatch({
+          type: "EMPTY_BASKET",
+        });
+
+        // When dont want the user come back to the payment page after if the press the back keyword.
+        history.replace("/orders");
+      });
+  };
 
   const handleChange = (event) => {
     // Listen for changes in the CardElement
@@ -76,7 +139,13 @@ function Payment() {
                   thousandSeparator={true}
                   prefix={"$"}
                 />
+                <button disabled={processing || disabled || succeeded}>
+                  <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
+                </button>
               </div>
+
+              {/* Errors */}
+              {error && <div>{error}</div>}
             </form>
           </div>
         </div>

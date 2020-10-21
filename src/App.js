@@ -5,6 +5,7 @@ import Home from "./componets/Home";
 import Login from "./componets/Login";
 import Checkout from "./componets/Checkout";
 import Payment from "./componets/Payment";
+import Orders from "./componets/Orders";
 import { auth } from "./firebase";
 import { useStateValue } from "./StateProvider";
 import { loadStripe } from "@stripe/stripe-js";
@@ -50,16 +51,23 @@ function App() {
             <Login />
           </Route>
 
-          <Route path="/checkout">
-            <Header />
-            <Checkout />
-          </Route>
           <Route path="/payment">
             <Header />
             <Elements stripe={promise}>
               <Payment />
             </Elements>
           </Route>
+
+          <Route path="/orders">
+            <Header />
+            <Orders />
+          </Route>
+
+          <Route path="/checkout">
+            <Header />
+            <Checkout />
+          </Route>
+
           <Route path="/">
             <Header />
             <Home />

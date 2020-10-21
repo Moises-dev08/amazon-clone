@@ -67,3 +67,7 @@
   margin-right: 10px;
   margin-left: 10px;
 }
+
+.header__collapse {
+  display: flex;
+}

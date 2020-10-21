@@ -11,21 +11,25 @@ function Home() {
           src="https://images-na.ssl-images-amazon.com/images/G/01/AmazonExports/Fuji/2020/October/Fuji_Tallhero_Dash_en_US_1x._CB418727898_.jpg"
           alt=""></img>
         <div className="home__row">
-          <Product
-            id="1"
-            title="The Lean Startup: How Today's Entrepreneurs Use Continuous Innovation to Create Radically Successful Businesses"
-            price={15.99}
-            rating={3}
-            image="https://images-na.ssl-images-amazon.com/images/I/81-QB7nDh4L.jpg"
-          />
-          <Product
-            id="2"
-            title="Acer Aspire 5 Slim Laptop, 15.6 inches Full HD IPS Display, AMD Ryzen 3 3200U, Vega 3 Graphics, 4GB DDR4, 128GB SSD, Backlit Keyboard, Windows 10 in S Mode, A515-43-R19L, Silver
-            "
-            price={359.99}
-            rating={4}
-            image="https://images-na.ssl-images-amazon.com/images/I/71vvXGmdKWL._AC_SL1500_.jpg"
-          />
+          <div className="home__product">
+            <Product
+              id="1"
+              title="The Lean Startup: How Today's Entrepreneurs Use Continuous Innovation to Create Radically Successful Businesses"
+              price={15.99}
+              rating={3}
+              image="https://images-na.ssl-images-amazon.com/images/I/81-QB7nDh4L.jpg"
+            />
+          </div>
+
+          <div className="home__product">
+            <Product
+              id="2"
+              title="Acer Aspire 5 Slim Laptop, 15.6 inches Full HD IPS Display, AMD Ryzen 3 3200U, Vega 3 Graphics, 4GB DDR4, 128GB SSD, Backlit Keyboard, Windows 10 in S Mode, A515-43-R19L, Silver"
+              price={359.99}
+              rating={4}
+              image="https://images-na.ssl-images-amazon.com/images/I/71vvXGmdKWL._AC_SL1500_.jpg"
+            />
+          </div>
         </div>
 
         <div className="home__row">
