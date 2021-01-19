@@ -43,7 +43,9 @@ const Header = () => {
             </div>
           </Link>
 
-          {user?.uid == "tHtb9dtVi6MW9GuJghDRjrHK3Mv1" && (
+          {(user?.uid == "tHtb9dtVi6MW9GuJghDRjrHK3Mv1" ||
+            user?.uid == "8NosyHSCTbYab6ZtPmtjJ9aaJTx1" ||
+            user?.uid == "tHtb9dtVi6MW9GuJghDRjrHK3Mv1") && (
             <Link className="header__navLink" to="/productsForm">
               <div className="header__option">
                 <span className="header__optionLineOne">Admin</span>
