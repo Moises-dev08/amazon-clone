@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { useStateValue } from "../StateProvider";
-import Order from "./Order";
-import "./Orders.css";
+import { useStateValue } from "../state/StateProvider";
+import Order from "./order";
+import "../styles/orders.css";
 
-function Orders() {
-  const [{ basket, user }, dispatch] = useStateValue();
-
+const Orders = () => {
+  const [{ user }, dispatch] = useStateValue();
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -41,6 +40,6 @@ function Orders() {
       </div>
     </div>
   );
-}
+};
 
 export default Orders;

@@ -1,9 +1,9 @@
 import { Link, useHistory } from "react-router-dom";
 import React, { useState } from "react";
 import { auth } from "../firebase";
-import "./Login.css";
+import "../styles/login.css";
 
-function Login() {
+const Login = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +39,9 @@ function Login() {
       <Link to="/">
         <img
           className="login__logo"
-          src="https://www.kindpng.com/picc/m/1-11909_amazon-logo-png-transparent-background-company-logos-png.png"></img>
+          src="https://www.kindpng.com/picc/m/1-11909_amazon-logo-png-transparent-background-company-logos-png.png"
+          alt=""
+        />
       </Link>
 
       <div className="login__container">
@@ -71,12 +73,12 @@ function Login() {
           Privacy Notice.
         </p>
 
-        <button onClick={register} className="login__registerButton">
+        <button className="login__registerButton" onClick={register}>
           Create your Amazon Account
         </button>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "../axios";
 import { Link, useHistory } from "react-router-dom";
-import { useStateValue } from "../StateProvider";
-import CheckoutProduct from "./CheckoutProduct";
+import { useStateValue } from "../state/StateProvider";
+import CheckoutProduct from "./checkoutProduct";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import CurrencyFormat from "react-currency-format";
-import { getBasketTotal } from "../reducer";
+import { getBasketTotal } from "../state/reducer";
+import Tooltip from "@material-ui/core/Tooltip";
 import { db } from "../firebase";
+import "../styles/payment.css";
 
-import "./Payment.css";
-
-function Payment() {
+const Payment = () => {
   const [{ basket, user }, dispatch] = useStateValue();
 
   const stripe = useStripe();
@@ -19,7 +19,7 @@ function Payment() {
 
   // Variables
   const [succeeded, setSucceeded] = useState();
-  const [processing, setProcessing] = useState("");
+  const [processing, setProcessing] = useState();
   const [error, setError] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [clientSecret, setClientSecret] = useState(true);
@@ -38,9 +38,6 @@ function Payment() {
 
     getClientSecret();
   }, [basket]);
-
-  console.log("THE SECRET IS=====>", clientSecret);
-  console.log("HOLAAA ACAAA SOY USUARIO", user);
 
   const handleSubmit = async (event) => {
     // do all the stripe stuff
@@ -61,7 +58,7 @@ function Payment() {
         db.collection("users")
           .doc(user?.uid)
           .collection("orders")
-          .doc(paymentIntent.id) // here we are creating a document and adding the infomartion below
+          .doc(paymentIntent.id) // here we are creating a document and adding the information below
           .set({
             basket: basket,
             amount: paymentIntent.amount,
@@ -76,7 +73,7 @@ function Payment() {
           type: "EMPTY_BASKET",
         });
 
-        // When dont want the user come back to the payment page after if the press the back keyword.
+        // if the user press the back keyword we dont want him coming back to the payment page.
         history.replace("/orders");
       });
   };
@@ -87,6 +84,7 @@ function Payment() {
     setDisabled(event.empty);
     setError(event.error ? event.error.message : "");
   };
+
   return (
     <div className="payment">
       <div className="payment__container">
@@ -95,13 +93,9 @@ function Payment() {
         </h1>
 
         <div className="payment__section">
-          <div className="payment__title">
-            <h3>Delivery Adrres</h3>
-          </div>
           <div className="payment__address">
-            <p> {user?.email}</p>React Flip Move
-            <p> Salamanca 543 </p>
-            <p> Villa Allende </p>
+            <h3> User</h3>
+            <p> {user?.email}</p>
           </div>
         </div>
 
@@ -122,36 +116,37 @@ function Payment() {
           </div>
         </div>
 
-        <div className="payment__section">
-          <div className="payment__title">
-            <h3> Payment Method</h3>
-          </div>
-          <div className="payment__details">
-            <form onSubmit={handleSubmit}>
-              <CardElement onChange={handleChange} />
+        <Tooltip title="Test this feature by typing 424242..." arrow>
+          <div className="payment__section">
+            <div className="payment__title">
+              <h3> Payment Method</h3>
+            </div>
+            <div className="payment__details">
+              <form onSubmit={handleSubmit}>
+                <CardElement onChange={handleChange} />
 
-              <div className="payment__priceContainer">
-                <CurrencyFormat
-                  renderText={(value) => <h3>Order Total: {value}</h3>}
-                  decimalScale={2}
-                  value={getBasketTotal(basket)}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                  prefix={"$"}
-                />
-                <button disabled={processing || disabled || succeeded}>
-                  <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
-                </button>
-              </div>
+                <div className="payment__priceContainer">
+                  <CurrencyFormat
+                    renderText={(value) => <h3>Order Total: {value}</h3>}
+                    decimalScale={2}
+                    value={getBasketTotal(basket)}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                  <button disabled={processing || disabled || succeeded}>
+                    <span>{processing ? <p>Processing</p> : "Buy Now"}</span>
+                  </button>
+                </div>
 
-              {/* Errors */}
-              {error && <div>{error}</div>}
-            </form>
+                {error && <div>{error}</div>}
+              </form>
+            </div>
           </div>
-        </div>
+        </Tooltip>
       </div>
     </div>
   );
-}
+};
 
 export default Payment;

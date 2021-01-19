@@ -1,10 +1,10 @@
 import React from "react";
-import CheckoutProduct from "./CheckoutProduct";
+import CheckoutProduct from "./checkoutProduct";
 import moment from "moment";
 import CurrencyFormat from "react-currency-format";
-import "./Order.css";
+import "../styles/order.css";
 
-function Order({ order }) {
+const Order = ({ order }) => {
   return (
     <div className="order">
       <h2>Order</h2>

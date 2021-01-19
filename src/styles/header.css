@@ -3,9 +3,10 @@
   display: flex;
   align-items: center;
   background-color: #131921;
-  position: sticky;
+  position: static;
   top: 0;
   z-index: 100;
+  width: 100%;
 }
 
 .header__logo {
@@ -19,7 +20,7 @@
   display: flex;
   flex: 1;
   align-items: center;
-  border-radius: 24px;
+  border-radius: 25px;
 }
 
 .header__searchInput {
@@ -48,8 +49,13 @@
   color: white;
 }
 
+.header__navLink {
+  text-decoration: none;
+}
+
 .header__optionLineOne {
   font-size: 10px;
+  text-decoration: none;
 }
 
 .header__optionLineTwo {
@@ -68,6 +74,28 @@
   margin-left: 10px;
 }
 
-.header__collapse {
-  display: flex;
+.headerResponsive {
+  display: none;
+}
+
+@media screen and (min-device-width: 480px) and (max-width: 768px) {
+  .header {
+    display: flex;
+    object-fit: contain;
+    position: static;
+  }
+
+  .headerResponsive {
+    display: none;
+  }
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  .header {
+    display: none;
+  }
+
+  .headerResponsive {
+    display: block;
+  }
 }
